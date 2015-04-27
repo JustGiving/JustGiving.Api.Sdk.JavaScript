@@ -17,11 +17,11 @@ Getting Started
 
 ### Bower
 
-Stay tuned
+```bower install justgiving-apiclient --save```
 
 ### NPM
 
-Stay tuned
+```npm install justgiving-apiclient --save```
 
 ### Download the Source
 
@@ -61,8 +61,8 @@ Roadmap
 -------
 
 - [ ] Full API coverage
-- [ ] Publish to Bower, Jam
-- [ ] Publish to npm
+- [x] Publish to Bower
+- [x] Publish to npm
 - [ ] Test with Testling
 - [ ] Browser examples in gh-pages branch
 - [ ] More examples, including Rx
