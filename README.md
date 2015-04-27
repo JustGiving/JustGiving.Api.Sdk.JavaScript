@@ -17,11 +17,11 @@ Getting Started
 
 ### Bower
 
-```bower install justgiving-apiclient --save```
+```$ bower install justgiving-apiclient --save```
 
 ### NPM
 
-```npm install justgiving-apiclient --save```
+```$ npm install justgiving-apiclient --save```
 
 ### Download the Source
 
