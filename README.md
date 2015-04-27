@@ -26,8 +26,8 @@ Stay tuned
 ### Download the Source
 
 ```bash
-git clone https://github.com/JustGiving/JustGiving.Api.Sdk.git
-cd ./JustGiving.Api.Sdk/JavaScript
+git clone https://github.com/JustGiving/JustGiving.Api.Sdk.JavaScript.git
+cd ./JustGiving.Api.Sdk.JavaScript
 ```
 
 ### Building from source
