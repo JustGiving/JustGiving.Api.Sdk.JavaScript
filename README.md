@@ -76,4 +76,4 @@ The JavaScript API works natively with modern browsers (eg Chrome 43) and using 
 License
 -------
 
-Copyright (c) 2010 Giving.com, trading as JustGiving. Licensed under the Apache License (v2.0).
+Copyright (c) 2015 Giving.com, trading as JustGiving. Licensed under the Apache License (v2.0).
