@@ -39,6 +39,7 @@ To get the latest dependencies, build and run tests:
 ```bash
 npm update
 bower update
+npm install -g gulp
 gulp
 ```
 

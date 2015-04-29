@@ -29,7 +29,7 @@ export class ApiClient {
       options.headers['Content-Type'] = 'application/json';
     }
     return options;
-  };
+  }
 
   _handleResponse(response) {
     if (response.status >= 400) {
@@ -47,7 +47,7 @@ export class ApiClient {
     }
 
     return response.json();
-  };
+  }
 
   _fetch(resource, payload, method) {
     return fetch(`${this._url}/${this._version}/${resource}`, this._getOptions(payload, method)).then(this._handleResponse);
@@ -84,7 +84,7 @@ export class ApiClient {
 
   getAccount() {
     return this._fetch('account');
-  };
+  }
 
   getInterests() {
     return this._fetch('account/interest');
@@ -110,17 +110,17 @@ export class ApiClient {
   // Countries resource
   getCountries() {
     return this._fetch('countries');
-  };
+  }
 
   // Currency resource
   getCurrencies() {
     return this._fetch('fundraising/currencies');
-  };
+  }
 
   // Charity resource
   getCharityCategories() {
     return this._fetch('charity/categories');
-  };
+  }
 
   getCharity(charityId) {
     return this._fetch(`charity/${charityId}`);
