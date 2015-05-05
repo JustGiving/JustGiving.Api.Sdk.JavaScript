@@ -32,6 +32,7 @@
 <script src="../bower_components/fetch/fetch.js"></script>
 <script src="../bower_components/es6-promise/promise.js"></script>
 <script src="../bower_components/knockout/dist/knockout.js"></script>
+<script src="../bower_components/rxjs/dist/rx.all.js"></script>
 
 <script src="../dist/justgiving-apiclient.min.js"></script>
 <script>
@@ -45,20 +46,20 @@
     this.marathonEvents = ko.observableArray([]);
   };
   MarathonsViewModel.prototype.load = function() {
-    jgAnon.searchEvents('marathon')
-      .then(this._handleSearchResponse.bind(this))
-      .catch(errorLog('marathon events'));
-  };
-  MarathonsViewModel.prototype._handleSearchResponse = function(marathonResponse){
-    marathonResponse.events.forEach(function(event) {
-      jgAnon.getEventPages(event.id)
-        .then(this._handlePagesResponse.bind(this, event));
-    }.bind(this));
-  };
-  MarathonsViewModel.prototype._handlePagesResponse = function(event, pagesResponse) {
-      event.pages = pagesResponse.fundraisingPages;
-      event.pageCount = pagesResponse.totalFundraisingPages;
-      this.marathonEvents.push(event);
+    Rx.Observable.fromPromise(jgAnon.searchEvents('marathon'))
+  		.flatMap(function(events) {
+        return Rx.Observable.from(events.events).flatMap(function (event) {
+          return Rx.Observable.fromPromise(jgAnon.getEventPages(event.id))
+            .select(function(eventPages) { 
+              event.pages = eventPages.fundraisingPages;
+              event.pageCount = eventPages.totalFundraisingPages;
+              return event;
+            });
+        }); 
+       })
+  		.forEach(function(event) {
+        this.marathonEvents.push(event);
+  		}.bind(this), errorLog('marathon events'));
   };
 
   var viewModel = new MarathonsViewModel();

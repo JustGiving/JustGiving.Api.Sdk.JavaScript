@@ -24,5 +24,8 @@
     "fetch": "~0.7.0",
     "es6-promise": "~2.1.0",
     "knockout": "~3.3.0"
+  },
+  "dependencies": {
+    "rxjs": "~2.5.2"
   }
 }
