@@ -9,7 +9,7 @@ JavaScript SDK
 
 [![Join the chat at https://gitter.im/JustGiving/JustGiving.Api.Sdk.JavaScript](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/JustGiving/JustGiving.Api.Sdk.JavaScript?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Modern JG client using the Fetch API and promises.
+Modern, [isomorphic](http://isomorphic.net/) JG client using the Fetch API and promises.
 Works in IE10 and above using polyfills.
 
 7KB minified.
