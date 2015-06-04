@@ -1,10 +1,10 @@
 class Pagination {
   constructor(pageNum, pageSize) {
-    this.pageSizeRestriction = pageSize?`pageSize=${pageSize}&`:'';
-    this.pageNumRestriction = pageNum?`pageNum=${pageNum}&`:'';
-    this.pageRestriction = pageNum?`page=${pageNum}&`:'';
-    this.limitRestriction = pageSize?`limit=${pageSize}&`:'';
-    this.offsetRestriction = pageNum?`offset=${pageNum}&`:'';
+    this.pageSizeRestriction = pageSize ? `pageSize=${pageSize}&` : '';
+    this.pageNumRestriction = pageNum ? `pageNum=${pageNum}&` : '';
+    this.pageRestriction = pageNum ? `page=${pageNum}&` : '';
+    this.limitRestriction = pageSize ? `limit=${pageSize}&` : '';
+    this.offsetRestriction = pageNum ? `offset=${pageNum}&` : '';
   }
 }
 
@@ -59,12 +59,12 @@ export class ApiClient {
   }
 
   getFundraisingPagesForUser(email, charityId) {
-    const charityRestriction = (charityId?`?charityId=${charityId}`:'');
+    const charityRestriction = (charityId ? `?charityId=${charityId}` : '');
     return this._fetch(`account/${email}/pages${charityRestriction}`);
   }
 
   getDonationsForUser(pageSize, pageNum, charityId) {
-    const charityRestriction = (charityId?`charityId=${charityId}&`:'');
+    const charityRestriction = (charityId ? `charityId=${charityId}&` : '');
     const pagination = new Pagination(pageNum, pageSize);
     return this._fetch(`account/donations?${pagination.pageSizeRestriction}${pagination.pageNumRestriction}${charityRestriction}`);
   }
@@ -196,8 +196,8 @@ export class ApiClient {
   // Search resource
   searchCharities(searchTerm, charityId, categoryId, pageNum, pageSize) {
     const pagination = new Pagination(pageNum, pageSize);
-    const charityIdRestriction = charityId.length?charityId.map(id => `charityId=${id}&`).join(''):`charityId=${charityId}&`;
-    const categoryIdRestriction = categoryId.length?categoryId.map(id => `categoryId=${id}&`).join(''):`categoryId=${categoryId}&`;
+    const charityIdRestriction = charityId.length ? charityId.map(id => `charityId=${id}&`).join('') : `charityId=${charityId}&`;
+    const categoryIdRestriction = categoryId.length ? categoryId.map(id => `categoryId=${id}&`).join('') : `categoryId=${categoryId}&`;
     return this._fetch(`charity/search?q=${encodeURIComponent(searchTerm)}&${categoryIdRestriction}${charityIdRestriction}${pagination.pageSizeRestriction}${pagination.pageRestriction}`);
   }
 

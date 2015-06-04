@@ -19,11 +19,11 @@
 })(this, function (exports) {
   'use strict';
 
-  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   var Pagination = function Pagination(pageNum, pageSize) {
     _classCallCheck(this, Pagination);
@@ -50,7 +50,7 @@
     ApiClient.prototype._getOptions = function _getOptions(payload, method) {
       var options = { method: method || 'GET', headers: { 'x-app-id': this._appId, Accept: 'application/json' } };
       if (this._accessToken) {
-        options.headers.Authorization = this._accessToken;
+        options.headers['Authorization'] = this._accessToken;
       }
       if (payload || method === 'POST') {
         options.method = method || 'POST';
