@@ -439,7 +439,7 @@ describe('Given JG client instance', function() {
     });
     it('should pass all parameters', function() {
       fetchMock
-      .withArgs('https://baseurl/v1/onesearch?q=searchTerm&g=true&i=index&limit=3&offset=10&country=GB')
+      .withArgs('https://baseurl/v1/onesearch?q=searchTerm&g=true&i=index&country=GB&limit=3&offset=10&')
       .once();
 
       target.oneSearch('searchTerm', true, 'index', 3, 10, 'GB');

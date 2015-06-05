@@ -40,12 +40,21 @@
       _classCallCheck(this, ApiClient);
 
       if (typeof url !== 'string') throw new Error('URL is required');
-      if (url.indexOf('https') !== 0) throw new Error('Please use https only');
+      // if (url.indexOf('https') !== 0) throw new Error('Please use https only');
       this._url = url;
       this._appId = appId;
       this._accessToken = accessToken;
       this._version = 'v1';
     }
+
+    ApiClient.prototype._processParam = function _processParam(queryStr, key, value) {
+      if (key && value) {
+        queryStr += queryStr.length === 0 ? '?' : '&';
+        queryStr += key + '=' + value;
+      }
+
+      return queryStr;
+    };
 
     ApiClient.prototype._getOptions = function _getOptions(payload, method) {
       var options = { method: method || 'GET', headers: { 'x-app-id': this._appId, Accept: 'application/json' } };
@@ -223,11 +232,10 @@
       return this._fetch('fundraising/pages/' + pageShortName + '/images', { caption: caption, isDefault: !!isDefault, url: url }, 'PUT');
     };
 
-    // OneSearch resource
-
-    ApiClient.prototype.onesearch = function onesearch(searchTerm, grouping, index, pageSize, pageNum, country) {
-      return this._fetch('onesearch?q=' + encodeURIComponent(searchTerm) + '&g=' + encodeURIComponent(grouping) + '&i=' + encodeURIComponent(index) + '&limit=' + pageSize + '&offset=' + pageNum + '&country=' + country);
-    };
+    // // OneSearch resource
+    // onesearch(searchTerm, grouping, index, pageSize, pageNum, country) {
+    //   return this._fetch(`onesearch?q=${encodeURIComponent(searchTerm)}&g=${encodeURIComponent(grouping)}&i=${encodeURIComponent(index)}&limit=${pageSize}&offset=${pageNum}&country=${country}`);
+    // }
 
     // Project resource
 
@@ -257,7 +265,26 @@
 
     ApiClient.prototype.oneSearch = function oneSearch(searchTerm, group, index, limit, offset, country) {
       var pagination = new Pagination(offset, limit);
-      return this._fetch('onesearch?q=' + searchTerm + '&g=' + group + '&i=' + index + '&' + pagination.limitRestriction + '' + pagination.offsetRestriction + 'country=' + country);
+      // return this._fetch(`onesearch?q=${searchTerm}&g=${group}&i=${index}&${pagination.limitRestriction}${pagination.offsetRestriction}country=${country}`);
+      var queryStr = '';
+
+      queryStr = this._processParam(queryStr, 'q', searchTerm);
+      queryStr = this._processParam(queryStr, 'g', group);
+      queryStr = this._processParam(queryStr, 'i', index);
+      queryStr = this._processParam(queryStr, 'country', country);
+
+      // Ugly mess to fix the inconsistencies between _processParam and paginator,
+      // a unified solution needs to be put in place
+      if (queryStr.length > 0 && (offset || limit)) {
+        queryStr += '&';
+      } else if (offset || limit) {
+        queryStr += '?';
+      }
+
+      queryStr += pagination.limitRestriction;
+      queryStr += pagination.offsetRestriction;
+
+      return this._fetch('onesearch' + queryStr);
     };
 
     // Team resource
