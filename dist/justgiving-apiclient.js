@@ -35,26 +35,29 @@
     this.offsetRestriction = pageNum ? 'offset=' + pageNum + '&' : '';
   };
 
+  var QueryString = function QueryString(conf) {
+    _classCallCheck(this, QueryString);
+
+    this.text = '';
+    for (var prop in conf) {
+      if (conf.hasOwnProperty(prop) && conf[prop]) {
+        this.text += this.text.length === 0 ? '?' : '&';
+        this.text += encodeURIComponent(prop) + '=' + encodeURIComponent(conf[prop]);
+      }
+    }
+  };
+
   var ApiClient = (function () {
     function ApiClient(url, appId, accessToken) {
       _classCallCheck(this, ApiClient);
 
       if (typeof url !== 'string') throw new Error('URL is required');
-      // if (url.indexOf('https') !== 0) throw new Error('Please use https only');
+      if (url.indexOf('https') !== 0) throw new Error('Please use https only');
       this._url = url;
       this._appId = appId;
       this._accessToken = accessToken;
       this._version = 'v1';
     }
-
-    ApiClient.prototype._processParam = function _processParam(queryStr, key, value) {
-      if (key && value) {
-        queryStr += queryStr.length === 0 ? '?' : '&';
-        queryStr += key + '=' + value;
-      }
-
-      return queryStr;
-    };
 
     ApiClient.prototype._getOptions = function _getOptions(payload, method) {
       var options = { method: method || 'GET', headers: { 'x-app-id': this._appId, Accept: 'application/json' } };
@@ -98,14 +101,21 @@
     };
 
     ApiClient.prototype.getFundraisingPagesForUser = function getFundraisingPagesForUser(email, charityId) {
-      var charityRestriction = charityId ? '?charityId=' + charityId : '';
-      return this._fetch('account/' + email + '/pages' + charityRestriction);
+      var queryString = new QueryString({
+        charityId: charityId
+      });
+
+      return this._fetch('account/' + email + '/pages' + queryString.text);
     };
 
     ApiClient.prototype.getDonationsForUser = function getDonationsForUser(pageSize, pageNum, charityId) {
-      var charityRestriction = charityId ? 'charityId=' + charityId + '&' : '';
-      var pagination = new Pagination(pageNum, pageSize);
-      return this._fetch('account/donations?' + pagination.pageSizeRestriction + '' + pagination.pageNumRestriction + '' + charityRestriction);
+      var queryString = new QueryString({
+        charityId: charityId,
+        pageSize: pageSize,
+        pageNum: pageNum
+      });
+
+      return this._fetch('account/donations' + queryString.text);
     };
 
     ApiClient.prototype.checkAccountAvailability = function checkAccountAvailability(email) {
@@ -117,8 +127,12 @@
     };
 
     ApiClient.prototype.getAccountRating = function getAccountRating(pageSize, pageNum) {
-      var pagination = new Pagination(pageNum, pageSize);
-      return this._fetch('account/rating?' + pagination.pageSizeRestriction + '' + pagination.pageRestriction);
+      var queryString = new QueryString({
+        pageSize: pageSize,
+        page: pageNum
+      });
+
+      return this._fetch('account/rating' + queryString.text);
     };
 
     ApiClient.prototype.getAccount = function getAccount() {
@@ -142,12 +156,19 @@
     };
 
     ApiClient.prototype.requestPasswordReminder = function requestPasswordReminder(email) {
-      return this._fetch('account/' + email + '/requestpasswordreminder');
+      return this._fetch('account/' + encodeURIComponent(email) + '/requestpasswordreminder');
     };
 
     ApiClient.prototype.changePassword = function changePassword(email, currentPassword, newPassword) {
       if (!email || !currentPassword || !newPassword) throw new Error('All parameters are required');
-      return this._fetch('account/changePassword?emailaddress=' + email + '&currentpassword=' + encodeURIComponent(currentPassword) + '&newpassword=' + encodeURIComponent(newPassword), undefined, 'POST');
+
+      var queryString = new QueryString({
+        emailaddress: email,
+        currentpassword: currentPassword,
+        newpassword: newPassword
+      });
+
+      return this._fetch('account/changePassword' + queryString.text, undefined, 'POST');
     };
 
     // Countries resource
@@ -198,8 +219,11 @@
     };
 
     ApiClient.prototype.getEventPages = function getEventPages(eventId, pageSize, pageNum) {
-      var pagination = new Pagination(pageNum, pageSize);
-      return this._fetch('event/' + eventId + '/pages?' + pagination.pageSizeRestriction + '' + pagination.pageRestriction);
+      var queryString = new QueryString({
+        page: pageNum,
+        pageSize: pageSize
+      });
+      return this._fetch('event/' + eventId + '/pages' + queryString.text);
     };
 
     ApiClient.prototype.registerEvent = function registerEvent(eventDetails) {
@@ -217,7 +241,11 @@
     };
 
     ApiClient.prototype.suggestPageShortName = function suggestPageShortName(preferredName) {
-      return this._fetch('fundraising/pages/suggest?preferredName=' + encodeURIComponent(preferredName));
+      var queryString = new QueryString({
+        preferredName: preferredName
+      });
+
+      return this._fetch('fundraising/pages/suggest' + queryString.text);
     };
 
     ApiClient.prototype.checkPageExists = function checkPageExists(pageShortName) {
@@ -232,11 +260,6 @@
       return this._fetch('fundraising/pages/' + pageShortName + '/images', { caption: caption, isDefault: !!isDefault, url: url }, 'PUT');
     };
 
-    // // OneSearch resource
-    // onesearch(searchTerm, grouping, index, pageSize, pageNum, country) {
-    //   return this._fetch(`onesearch?q=${encodeURIComponent(searchTerm)}&g=${encodeURIComponent(grouping)}&i=${encodeURIComponent(index)}&limit=${pageSize}&offset=${pageNum}&country=${country}`);
-    // }
-
     // Project resource
 
     ApiClient.prototype.getProject = function getProject(projectId) {
@@ -246,45 +269,46 @@
     // Search resource
 
     ApiClient.prototype.searchCharities = function searchCharities(searchTerm, charityId, categoryId, pageNum, pageSize) {
-      var pagination = new Pagination(pageNum, pageSize);
       var charityIdRestriction = charityId.length ? charityId.map(function (id) {
         return 'charityId=' + id + '&';
       }).join('') : 'charityId=' + charityId + '&';
       var categoryIdRestriction = categoryId.length ? categoryId.map(function (id) {
         return 'categoryId=' + id + '&';
       }).join('') : 'categoryId=' + categoryId + '&';
-      return this._fetch('charity/search?q=' + encodeURIComponent(searchTerm) + '&' + categoryIdRestriction + '' + charityIdRestriction + '' + pagination.pageSizeRestriction + '' + pagination.pageRestriction);
+
+      var queryString = new QueryString({
+        q: searchTerm,
+        page: pageNum,
+        pageSize: pageSize
+      });
+
+      return this._fetch('charity/search' + queryString.text + '&' + categoryIdRestriction + '' + charityIdRestriction);
     };
 
     ApiClient.prototype.searchEvents = function searchEvents(searchTerm, pageNum, pageSize) {
       var pagination = new Pagination(pageNum, pageSize);
-      return this._fetch('event/search?q=' + encodeURIComponent(searchTerm) + '&' + pagination.pageSizeRestriction + '' + pagination.pageRestriction);
+      var queryString = new QueryString({
+        q: searchTerm,
+        page: pageNum,
+        pageSize: pageSize
+      });
+
+      return this._fetch('event/search' + queryString.text);
     };
 
     // OneSearch
 
     ApiClient.prototype.oneSearch = function oneSearch(searchTerm, group, index, limit, offset, country) {
-      var pagination = new Pagination(offset, limit);
-      // return this._fetch(`onesearch?q=${searchTerm}&g=${group}&i=${index}&${pagination.limitRestriction}${pagination.offsetRestriction}country=${country}`);
-      var queryStr = '';
+      var queryString = new QueryString({
+        limit: limit,
+        offset: offset,
+        q: searchTerm,
+        g: group,
+        i: index,
+        country: country
+      });
 
-      queryStr = this._processParam(queryStr, 'q', searchTerm);
-      queryStr = this._processParam(queryStr, 'g', group);
-      queryStr = this._processParam(queryStr, 'i', index);
-      queryStr = this._processParam(queryStr, 'country', country);
-
-      // Ugly mess to fix the inconsistencies between _processParam and paginator,
-      // a unified solution needs to be put in place
-      if (queryStr.length > 0 && (offset || limit)) {
-        queryStr += '&';
-      } else if (offset || limit) {
-        queryStr += '?';
-      }
-
-      queryStr += pagination.limitRestriction;
-      queryStr += pagination.offsetRestriction;
-
-      return this._fetch('onesearch' + queryStr);
+      return this._fetch('onesearch' + queryString.text);
     };
 
     // Team resource

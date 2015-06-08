@@ -8,27 +8,30 @@ class Pagination {
   }
 }
 
+class QueryString {
+  constructor(conf) {
+    this.text = '';
+    for (let prop in conf) {
+      if (conf.hasOwnProperty(prop) && conf[prop]) {
+        this.text += (this.text.length === 0) ? '?' : '&';
+        this.text += encodeURIComponent(prop) + '=' + encodeURIComponent(conf[prop]);
+      }
+    }
+  }
+}
+
 export class ApiClient {
   constructor(url, appId, accessToken) {
     if (typeof url !== 'string') throw new Error('URL is required');
-    // if (url.indexOf('https') !== 0) throw new Error('Please use https only');
+    if (url.indexOf('https') !== 0) throw new Error('Please use https only');
     this._url = url;
     this._appId = appId;
     this._accessToken = accessToken;
     this._version = 'v1';
   }
 
-  _processParam(queryStr, key, value) {
-    if ( key && value) {
-      queryStr += (queryStr.length === 0) ? '?' : '&';
-      queryStr += key + '=' + value;
-    }
-
-    return queryStr;
-  }
-
   _getOptions(payload, method) {
-    const options = {method: method || 'GET', headers: {'x-app-id': this._appId, Accept: 'application/json'}};
+    const options = { method: method || 'GET', headers: { 'x-app-id': this._appId, Accept: 'application/json' } };
     if (this._accessToken) {
       options.headers['Authorization'] = this._accessToken;
     }
@@ -44,7 +47,7 @@ export class ApiClient {
     if (response.status >= 400) {
       const contentType = response.headers.get('content-type');
 
-      if(contentType && contentType.indexOf('application/json') === 0) {
+      if (contentType && contentType.indexOf('application/json') === 0) {
         return response.json().then(json => {
           if (json[0]) {
             throw new Error(`${response.status} ${response.statusText}. ${json[0].id} : ${json[0].desc}`);
@@ -64,22 +67,29 @@ export class ApiClient {
 
   // Account resource
   validateAccount(email, password) {
-    return this._fetch('account/validate', {email: email, password: password});
+    return this._fetch('account/validate', { email: email, password: password });
   }
 
   getFundraisingPagesForUser(email, charityId) {
-    const charityRestriction = (charityId ? `?charityId=${charityId}` : '');
-    return this._fetch(`account/${email}/pages${charityRestriction}`);
+    const queryString = new QueryString({
+      charityId: charityId
+    });
+
+    return this._fetch(`account/${email}/pages${queryString.text}`);
   }
 
   getDonationsForUser(pageSize, pageNum, charityId) {
-    const charityRestriction = (charityId ? `charityId=${charityId}&` : '');
-    const pagination = new Pagination(pageNum, pageSize);
-    return this._fetch(`account/donations?${pagination.pageSizeRestriction}${pagination.pageNumRestriction}${charityRestriction}`);
+    const queryString = new QueryString({
+      charityId: charityId,
+      pageSize: pageSize,
+      pageNum: pageNum
+    });
+
+    return this._fetch(`account/donations${queryString.text}`);
   }
 
   checkAccountAvailability(email) {
-    return this._fetch(`account/${encodeURIComponent(email)}`);
+    return this._fetch(`account/${encodeURIComponent(email) }`);
   }
 
   getContentFeed() {
@@ -87,8 +97,12 @@ export class ApiClient {
   }
 
   getAccountRating(pageSize, pageNum) {
-    const pagination = new Pagination(pageNum, pageSize);
-    return this._fetch(`account/rating?${pagination.pageSizeRestriction}${pagination.pageRestriction}`);
+    const queryString = new QueryString({
+      pageSize: pageSize,
+      page: pageNum
+    });
+
+    return this._fetch(`account/rating${queryString.text}`);
   }
 
   getAccount() {
@@ -100,7 +114,7 @@ export class ApiClient {
   }
 
   addInterest(interest) {
-    return this._fetch('account/interest', {interest: interest});
+    return this._fetch('account/interest', { interest: interest });
   }
 
   replaceInterests(...interests) {
@@ -108,12 +122,19 @@ export class ApiClient {
   }
 
   requestPasswordReminder(email) {
-    return this._fetch(`account/${email}/requestpasswordreminder`);
+    return this._fetch(`account/${encodeURIComponent(email) }/requestpasswordreminder`);
   }
 
   changePassword(email, currentPassword, newPassword) {
     if (!email || !currentPassword || !newPassword) throw new Error('All parameters are required');
-    return this._fetch(`account/changePassword?emailaddress=${email}&currentpassword=${encodeURIComponent(currentPassword)}&newpassword=${encodeURIComponent(newPassword)}`, undefined, 'POST');
+
+    const queryString = new QueryString({
+      emailaddress: email,
+      currentpassword: currentPassword,
+      newpassword: newPassword
+    });
+
+    return this._fetch(`account/changePassword${queryString.text}`, undefined, 'POST');
   }
 
   // Countries resource
@@ -146,7 +167,7 @@ export class ApiClient {
   }
 
   getDonationByReference(thirdPartyReference) {
-    return this._fetch(`donation/ref/${encodeURIComponent(thirdPartyReference)}`);
+    return this._fetch(`donation/ref/${encodeURIComponent(thirdPartyReference) }`);
   }
 
   getDonationStatus(donationId) {
@@ -159,8 +180,11 @@ export class ApiClient {
   }
 
   getEventPages(eventId, pageSize, pageNum) {
-    const pagination = new Pagination(pageNum, pageSize);
-    return this._fetch(`event/${eventId}/pages?${pagination.pageSizeRestriction}${pagination.pageRestriction}`);
+    const queryString = new QueryString({
+      page: pageNum,
+      pageSize: pageSize
+    });
+    return this._fetch(`event/${eventId}/pages${queryString.text}`);
   }
 
   registerEvent(eventDetails) {
@@ -173,11 +197,15 @@ export class ApiClient {
   }
 
   getFundraisingPage(pageShortName) {
-    return this._fetch(`fundraising/pages/${encodeURIComponent(pageShortName)}`);
+    return this._fetch(`fundraising/pages/${encodeURIComponent(pageShortName) }`);
   }
 
   suggestPageShortName(preferredName) {
-    return this._fetch(`fundraising/pages/suggest?preferredName=${encodeURIComponent(preferredName)}`);
+    const queryString = new QueryString({
+      preferredName: preferredName
+    });
+
+    return this._fetch(`fundraising/pages/suggest${queryString.text}`);
   }
 
   checkPageExists(pageShortName) {
@@ -189,13 +217,8 @@ export class ApiClient {
   }
 
   addFundraisingPageImage(pageShortName, caption, url, isDefault) {
-    return this._fetch(`fundraising/pages/${pageShortName}/images`, {caption: caption, isDefault: !!isDefault, url: url}, 'PUT');
+    return this._fetch(`fundraising/pages/${pageShortName}/images`, { caption: caption, isDefault: !!isDefault, url: url }, 'PUT');
   }
-
-  // // OneSearch resource
-  // onesearch(searchTerm, grouping, index, pageSize, pageNum, country) {
-  //   return this._fetch(`onesearch?q=${encodeURIComponent(searchTerm)}&g=${encodeURIComponent(grouping)}&i=${encodeURIComponent(index)}&limit=${pageSize}&offset=${pageNum}&country=${country}`);
-  // }
 
   // Project resource
   getProject(projectId) {
@@ -204,60 +227,57 @@ export class ApiClient {
 
   // Search resource
   searchCharities(searchTerm, charityId, categoryId, pageNum, pageSize) {
-    const pagination = new Pagination(pageNum, pageSize);
     const charityIdRestriction = charityId.length ? charityId.map(id => `charityId=${id}&`).join('') : `charityId=${charityId}&`;
     const categoryIdRestriction = categoryId.length ? categoryId.map(id => `categoryId=${id}&`).join('') : `categoryId=${categoryId}&`;
-    return this._fetch(`charity/search?q=${encodeURIComponent(searchTerm)}&${categoryIdRestriction}${charityIdRestriction}${pagination.pageSizeRestriction}${pagination.pageRestriction}`);
+
+    const queryString = new QueryString({
+      q: searchTerm,
+      page: pageNum,
+      pageSize: pageSize
+    });
+
+    return this._fetch(`charity/search${queryString.text}&${categoryIdRestriction}${charityIdRestriction}`);
   }
 
   searchEvents(searchTerm, pageNum, pageSize) {
     const pagination = new Pagination(pageNum, pageSize);
-    return this._fetch(`event/search?q=${encodeURIComponent(searchTerm)}&${pagination.pageSizeRestriction}${pagination.pageRestriction}`);
+    const queryString = new QueryString({
+      q: searchTerm,
+      page: pageNum,
+      pageSize: pageSize
+    });
+
+    return this._fetch(`event/search${queryString.text}`);
   }
 
   // OneSearch
   oneSearch(searchTerm, group, index, limit, offset, country) {
-    const pagination = new Pagination(offset, limit);
-    // return this._fetch(`onesearch?q=${searchTerm}&g=${group}&i=${index}&${pagination.limitRestriction}${pagination.offsetRestriction}country=${country}`);
-    var queryStr = '';
+    const queryString = new QueryString({
+      limit: limit,
+      offset: offset,
+      q: searchTerm,
+      g: group,
+      i: index,
+      country: country
+    });
 
-    queryStr = this._processParam(queryStr, 'q', searchTerm);
-    queryStr = this._processParam(queryStr, 'g', group);
-    queryStr = this._processParam(queryStr, 'i', index);
-    queryStr = this._processParam(queryStr, 'country', country);
-
-    // Ugly mess to fix the inconsistencies between _processParam and paginator,
-    // a unified solution needs to be put in place
-    if(queryStr.length > 0 && (offset || limit) ) {
-      queryStr += '&';
-    }
-    else if(offset || limit) {
-      queryStr += '?';
-    }
-
-    queryStr += pagination.limitRestriction;
-    queryStr += pagination.offsetRestriction;
-
-
-
-
-    return this._fetch(`onesearch${queryStr}`);
+    return this._fetch(`onesearch${queryString.text}`);
   }
 
   // Team resource
   getTeam(shortName) {
-    return this._fetch(`team/${encodeURIComponent(shortName)}`);
+    return this._fetch(`team/${encodeURIComponent(shortName) }`);
   }
 
   checkTeamExists(shortName) {
-    return this._fetch(`team/${encodeURIComponent(shortName)}`, undefined, 'HEAD');
+    return this._fetch(`team/${encodeURIComponent(shortName) }`, undefined, 'HEAD');
   }
 
   createOrUpdateTeam(shortName, details) {
-    return this._fetch(`team/${encodeURIComponent(shortName)}`, details, 'PUT');
+    return this._fetch(`team/${encodeURIComponent(shortName) }`, details, 'PUT');
   }
 
   joinTeam(teamShortName, pageShortName) {
-    return this._fetch(`team/join/${encodeURIComponent(teamShortName)}`, {pageShortName: pageShortName}, 'PUT');
+    return this._fetch(`team/join/${encodeURIComponent(teamShortName) }`, { pageShortName: pageShortName }, 'PUT');
   }
 }

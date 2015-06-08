@@ -127,7 +127,7 @@ describe('Given JG client instance', function() {
     });
     it('should omit undefined pagination parameters', function() {
       fetchMock
-        .withArgs('https://baseurl/v1/account/rating?pageSize=10&')
+        .withArgs('https://baseurl/v1/account/rating?pageSize=10')
         .once();
 
       target.getAccountRating(10);
@@ -161,7 +161,7 @@ describe('Given JG client instance', function() {
     it('should pass charityId', function() {
       fetchMock
         .withArgs(sinon.match('charityId=50'))
-        .withArgs('https://baseurl/v1/account/donations?pageSize=10&pageNum=1&charityId=50&')
+        .withArgs('https://baseurl/v1/account/donations?charityId=50&pageSize=10&pageNum=1')
         .once();
 
       target.getDonationsForUser(10, 1, 50);
@@ -177,7 +177,7 @@ describe('Given JG client instance', function() {
     });
     it('should omit undefined pagination parameters', function() {
       fetchMock
-        .withArgs('https://baseurl/v1/account/donations?charityId=50&')
+        .withArgs('https://baseurl/v1/account/donations?charityId=50')
         .once();
 
       target.getDonationsForUser(undefined, undefined, 50);
@@ -232,7 +232,7 @@ describe('Given JG client instance', function() {
   describe('when getEventPages without specifying page', function() {
     it('should pass eventID', function() {
       fetchMock
-        .withArgs('https://baseurl/v1/event/42/pages?')
+        .withArgs('https://baseurl/v1/event/42/pages')
         .once();
 
       target.getEventPages(42);
@@ -412,7 +412,7 @@ describe('Given JG client instance', function() {
     });
     it('should omit undefined pagination parameters', function() {
       fetchMock
-      .withArgs('https://baseurl/v1/event/search?q=searchTerm&')
+      .withArgs('https://baseurl/v1/event/search?q=searchTerm')
       .once();
 
       target.searchEvents('searchTerm');
@@ -439,7 +439,7 @@ describe('Given JG client instance', function() {
     });
     it('should pass all parameters', function() {
       fetchMock
-      .withArgs('https://baseurl/v1/onesearch?q=searchTerm&g=true&i=index&country=GB&limit=3&offset=10&')
+      .withArgs('https://baseurl/v1/onesearch?limit=3&offset=10&q=searchTerm&g=true&i=index&country=GB')
       .once();
 
       target.oneSearch('searchTerm', true, 'index', 3, 10, 'GB');
