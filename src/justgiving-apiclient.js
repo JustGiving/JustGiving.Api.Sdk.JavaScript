@@ -1,13 +1,3 @@
-class Pagination {
-  constructor(pageNum, pageSize) {
-    this.pageSizeRestriction = pageSize ? `pageSize=${pageSize}&` : '';
-    this.pageNumRestriction = pageNum ? `pageNum=${pageNum}&` : '';
-    this.pageRestriction = pageNum ? `page=${pageNum}&` : '';
-    this.limitRestriction = pageSize ? `limit=${pageSize}&` : '';
-    this.offsetRestriction = pageNum ? `offset=${pageNum}&` : '';
-  }
-}
-
 class QueryString {
   constructor(conf) {
     this.text = '';
@@ -243,7 +233,6 @@ export class ApiClient {
   }
 
   searchEvents(searchTerm, pageNum, pageSize) {
-    const pagination = new Pagination(pageNum, pageSize);
     const queryString = new QueryString({
       q: searchTerm,
       page: pageNum,

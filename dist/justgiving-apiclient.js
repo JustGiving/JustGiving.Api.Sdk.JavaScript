@@ -25,16 +25,6 @@
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var Pagination = function Pagination(pageNum, pageSize) {
-    _classCallCheck(this, Pagination);
-
-    this.pageSizeRestriction = pageSize ? 'pageSize=' + pageSize + '&' : '';
-    this.pageNumRestriction = pageNum ? 'pageNum=' + pageNum + '&' : '';
-    this.pageRestriction = pageNum ? 'page=' + pageNum + '&' : '';
-    this.limitRestriction = pageSize ? 'limit=' + pageSize + '&' : '';
-    this.offsetRestriction = pageNum ? 'offset=' + pageNum + '&' : '';
-  };
-
   var QueryString = function QueryString(conf) {
     _classCallCheck(this, QueryString);
 
@@ -289,7 +279,6 @@
     };
 
     ApiClient.prototype.searchEvents = function searchEvents(searchTerm, pageNum, pageSize) {
-      var pagination = new Pagination(pageNum, pageSize);
       var queryString = new QueryString({
         q: searchTerm,
         page: pageNum,
