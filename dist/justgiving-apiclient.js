@@ -194,8 +194,11 @@
     };
 
     ApiClient.prototype.getEventsByCharity = function getEventsByCharity(charityId, pageSize, pageNum) {
-      var pagination = new Pagination(pageNum, pageSize);
-      return this._fetch('charity/' + charityId + '/events?' + pagination.pageSizeRestriction + '' + pagination.pageNumRestriction);
+      var queryString = new QueryString({
+        pageSize: pageSize,
+        pageNum: pageNum
+      });
+      return this._fetch('charity/' + charityId + '/events' + queryString.text);
     };
 
     // Donation resource

@@ -229,6 +229,35 @@ describe('Given JG client instance', function() {
     });
   });
 
+  describe('when getEventsByCharity', function() {
+    it('should pass charityId', function() {
+      fetchMock
+        .withArgs(sinon.match('charityId=50'))
+        .withArgs('https://baseurl/v1/charity/50/events?pageSize=10&pageNum=1')
+        .once();
+
+      target.getEventsByCharity(50, 10, 1);
+      mock.verify();
+    });
+    it('should pass pagination parameters', function() {
+      fetchMock
+        .withArgs(sinon.match('pageSize=10').and(sinon.match('pageNum=1')))
+        .once();
+
+      target.getEventsByCharity(50, 10, 1);
+      mock.verify();
+    });
+    it('should omit undefined pagination parameters', function() {
+      fetchMock
+        .withArgs('https://baseurl/v1/charity/50/events')
+        .once();
+
+      target.getEventsByCharity(50, undefined, undefined);
+      mock.verify();
+    });
+  });
+
+
   describe('when getEventPages without specifying page', function() {
     it('should pass eventID', function() {
       fetchMock
