@@ -23,45 +23,45 @@ var banner = ['/**',
   ' */',
   ''].join('\n');
 
-gulp.task('clean', function(cb) {
+gulp.task('clean', cb => {
   del('./dist/justgiving-apiclient*', cb);
 });
 
-gulp.task('build', ['build-full'], function() {
-   return gulp.src('dist/justgiving-apiclient.js')
+gulp.task('build', ['build-full'], () => 
+   gulp.src('dist/justgiving-apiclient.js')
      .pipe(uglify())
      .pipe(rename({ extname: '.min.js' }))
      .pipe(header(banner, { pkg : pkg } ))
-     .pipe(gulp.dest('dist'));
-});
+     .pipe(gulp.dest('dist'))
+);
 
-gulp.task('build-full', ['lint', 'clean'], function(){
-  return gulp.src(paths.scripts)
+gulp.task('build-full', ['lint', 'clean'], () => 
+  gulp.src(paths.scripts)
     .pipe(sourcemaps.init())
     .pipe(babel({modules:'umd', loose:'es6.classes', moduleId:'JustGiving'}))
     .pipe(header(banner, { pkg : pkg } ))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('dist'));
-});
+    .pipe(gulp.dest('dist'))
+);
 
-gulp.task('watch', function() {
+gulp.task('watch', () => {
   gulp.watch(paths.scripts, ['test']);
   gulp.watch(paths.tests, ['test']);
 });
 
-gulp.task('lint', function () {
-  return gulp.src(paths.scripts)
+gulp.task('lint', () =>
+  gulp.src(paths.scripts)
     .pipe(eslint())
     .pipe(eslint.format())
-    .pipe(eslint.failOnError());
-});
+    .pipe(eslint.failOnError())
+);
 
-gulp.task('test', ['build'], function() {
-  return gulp.src(['tests/*.js', 'dist/justgiving-apiclient.js'], { read: false })
-    .pipe(mocha());
-});
+gulp.task('test', ['build'], () =>
+  gulp.src(['tests/*.js', 'dist/justgiving-apiclient.js'], { read: false })
+    .pipe(mocha())
+);
 
-gulp.task('webserver', function() {
+gulp.task('webserver', () => {
   // eg http://localhost:8000/examples/method-samples.html or http://localhost:8000/examples/chained.knockout.html
   gulp.src('.')
     .pipe(webserver({
@@ -70,4 +70,4 @@ gulp.task('webserver', function() {
     }));
 });
 
-gulp.task('default', ['watch', 'test', 'webserver'], function() {});
+gulp.task('default', ['watch', 'test', 'webserver'], () => {});
