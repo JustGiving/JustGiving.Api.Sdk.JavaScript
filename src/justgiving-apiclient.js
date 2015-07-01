@@ -1,3 +1,6 @@
+/*
+ * Class QueryString - a handler for query parameters
+ */ 
 class QueryString {
   constructor(conf) {
     this.text = '';
@@ -10,6 +13,9 @@ class QueryString {
   }
 }
 
+/*
+ * Class ApiClient, main class of the SDK
+ */ 
 export class ApiClient {
   constructor(url, appId, accessToken) {
     if (typeof url !== 'string') throw new Error('URL is required');
