@@ -1,6 +1,6 @@
 /**
  * justgiving-apiclient - JustGiving API Client
- * @version v0.5.4
+ * @version v0.5.5
  * @link https://api.justgiving.com/
  * @license Apache v2.0
  */
@@ -24,6 +24,9 @@
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
+  /*
+   * Class QueryString - a handler for query parameters
+   */
 
   var QueryString = function QueryString(conf) {
     _classCallCheck(this, QueryString);
@@ -36,6 +39,10 @@
       }
     }
   };
+
+  /*
+   * Class ApiClient, main class of the SDK
+   */
 
   var ApiClient = (function () {
     function ApiClient(url, appId, accessToken) {
