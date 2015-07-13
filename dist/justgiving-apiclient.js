@@ -17,16 +17,16 @@
     global.JustGiving = mod.exports;
   }
 })(this, function (exports) {
+  /*
+   * Class QueryString - a handler for query parameters
+   */
   'use strict';
-
-  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
-  /*
-   * Class QueryString - a handler for query parameters
-   */
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   var QueryString = function QueryString(conf) {
     _classCallCheck(this, QueryString);
@@ -59,7 +59,7 @@
     ApiClient.prototype._getOptions = function _getOptions(payload, method) {
       var options = { method: method || 'GET', headers: { 'x-app-id': this._appId, Accept: 'application/json' } };
       if (this._accessToken) {
-        options.headers.Authorization = this._accessToken;
+        options.headers['Authorization'] = this._accessToken;
       }
       if (payload || method === 'POST') {
         options.method = method || 'POST';
@@ -76,19 +76,19 @@
         if (contentType && contentType.indexOf('application/json') === 0) {
           return response.json().then(function (json) {
             if (json[0]) {
-              throw new Error('' + response.status + ' ' + response.statusText + '. ' + json[0].id + ' : ' + json[0].desc);
+              throw new Error(response.status + ' ' + response.statusText + '. ' + json[0].id + ' : ' + json[0].desc);
             }
           });
         }
 
-        throw new Error('' + response.status + ' ' + response.statusText);
+        throw new Error(response.status + ' ' + response.statusText);
       }
 
       return response.json();
     };
 
     ApiClient.prototype._fetch = function _fetch(resource, payload, method) {
-      return fetch('' + this._url + '/' + this._version + '/' + resource, this._getOptions(payload, method)).then(this._handleResponse);
+      return fetch(this._url + '/' + this._version + '/' + resource, this._getOptions(payload, method)).then(this._handleResponse);
     };
 
     // Account resource
@@ -282,7 +282,7 @@
         pageSize: pageSize
       });
 
-      return this._fetch('charity/search' + queryString.text + '&' + categoryIdRestriction + '' + charityIdRestriction);
+      return this._fetch('charity/search' + queryString.text + '&' + categoryIdRestriction + charityIdRestriction);
     };
 
     ApiClient.prototype.searchEvents = function searchEvents(searchTerm, pageNum, pageSize) {
@@ -308,6 +308,17 @@
       });
 
       return this._fetch('onesearch' + queryString.text);
+    };
+
+    ApiClient.prototype.searchInMemory = function searchInMemory(firstName, lastName, page, pageSize) {
+      var queryString = new QueryString({
+        firstName: firstName,
+        lastName: lastName,
+        page: page,
+        pageSize: pageSize
+      });
+
+      return this._fetch('remember/search' + queryString.text);
     };
 
     // Team resource

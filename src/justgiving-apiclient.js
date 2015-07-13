@@ -262,6 +262,17 @@ export class ApiClient {
     return this._fetch(`onesearch${queryString.text}`);
   }
 
+  searchInMemory(firstName, lastName, page, pageSize) {
+    const queryString = new QueryString({
+      firstName: firstName,
+      lastName: lastName,
+      page: page,
+      pageSize: pageSize
+    });
+
+    return this._fetch(`remember/search${queryString.text}`);
+  }
+
   // Team resource
   getTeam(shortName) {
     return this._fetch(`team/${encodeURIComponent(shortName) }`);

@@ -475,4 +475,23 @@ describe('Given JG client instance', function() {
       mock.verify();
     });
   });
+
+  describe('when searchInMemory', function(){
+    it('should pass pagination parameters', function() {
+       fetchMock
+        .withArgs(sinon.match('page=10').and(sinon.match('pageSize=3')))
+        .once();
+
+      target.searchInMemory('john', 'smith', 10, 3);
+      mock.verify();
+    });
+    it('should omit undefined pagination parameters', function() {
+      fetchMock
+        .withArgs('https://baseurl/v1/remember/search?firstName=john&lastName=smith')
+        .once();
+
+      target.searchInMemory('john', 'smith');
+      mock.verify();
+    });
+  });  
 });
