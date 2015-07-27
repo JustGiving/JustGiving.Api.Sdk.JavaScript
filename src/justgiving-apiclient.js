@@ -1,5 +1,5 @@
-// Copyright (c) 2015 Giving.com, trading as JustGiving or its affiliates. All rights reserved.
-// Licensed under the Apache license. See LICENSE file in the project root for full license information.
+// Copyright (c) 2015 Giving.com Ltd, trading as JustGiving, or its affiliates. All Rights Reserved.
+// Licensed under the Apache License, Version 2.0 license. See LICENSE file in the project root for full license information.
 
 /*
  * Class QueryString - a handler for query parameters
