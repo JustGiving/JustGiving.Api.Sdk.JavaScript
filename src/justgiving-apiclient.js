@@ -228,18 +228,6 @@ export class ApiClient {
   }
 
   // Search resource
-  searchCharities(searchTerm, charityId, categoryId, pageNum, pageSize) {
-    const charityIdRestriction = charityId.length ? charityId.map(id => `charityId=${id}&`).join('') : `charityId=${charityId}&`;
-    const categoryIdRestriction = categoryId.length ? categoryId.map(id => `categoryId=${id}&`).join('') : `categoryId=${categoryId}&`;
-
-    const queryString = new QueryString({
-      q: searchTerm,
-      page: pageNum,
-      pageSize: pageSize
-    });
-
-    return this._fetch(`charity/search${queryString.text}&${categoryIdRestriction}${charityIdRestriction}`);
-  }
 
   searchEvents(searchTerm, pageNum, pageSize) {
     const queryString = new QueryString({

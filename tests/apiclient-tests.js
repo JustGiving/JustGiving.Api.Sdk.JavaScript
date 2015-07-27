@@ -379,57 +379,6 @@ describe('Given JG client instance', function() {
     });
   });
 
-  describe('when searchCharities', function() {
-    it('should pass pagination parameters', function() {
-      fetchMock
-        .withArgs(sinon.match('pageSize=10').and(sinon.match('page=3')))
-        .once();
-
-      target.searchCharities('searchTerm', 50, [1], 3, 10);
-      mock.verify();
-    });
-    it('should omit undefined pagination parameters', function() {
-      fetchMock
-        .withArgs('https://baseurl/v1/charity/search?q=searchTerm&categoryId=1&charityId=50&')
-        .once();
-
-      target.searchCharities('searchTerm', 50, [1]);
-      mock.verify();
-    });
-    it('should append all category IDs', function() {
-      fetchMock
-        .withArgs(sinon.match('categoryId=1').and(sinon.match('categoryId=2')))
-        .once();
-
-      target.searchCharities('searchTerm', 50, [1, 2]);
-      mock.verify();
-    });
-    it('should append all charity IDs', function() {
-      fetchMock
-        .withArgs(sinon.match('charityId=50').and(sinon.match('charityId=51')))
-        .once();
-
-      target.searchCharities('searchTerm', [50, 51], 1);
-      mock.verify();
-    });
-    it('should append single category ID', function() {
-      fetchMock
-        .withArgs(sinon.match('categoryId=1'))
-        .once();
-
-      target.searchCharities('searchTerm', 50, 1);
-      mock.verify();
-    });
-    it('should append single charity ID', function() {
-      fetchMock
-        .withArgs(sinon.match('charityId=50'))
-        .once();
-
-      target.searchCharities('searchTerm', 50, 1);
-      mock.verify();
-    });
-  });
-
   describe('when searchEvents', function() {
     it('should pass pagination parameters', function() {
       fetchMock

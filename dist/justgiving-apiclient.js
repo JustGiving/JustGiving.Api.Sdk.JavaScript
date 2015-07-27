@@ -1,6 +1,6 @@
 /**
  * justgiving-apiclient - JustGiving API Client
- * @version v0.5.5
+ * @version v0.5.6
  * @link https://api.justgiving.com/
  * @license Apache v2.0
  */
@@ -17,16 +17,19 @@
     global.JustGiving = mod.exports;
   }
 })(this, function (exports) {
-  /*
-   * Class QueryString - a handler for query parameters
-   */
   'use strict';
+
+  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
+  // Copyright (c) 2015 Giving.com, trading as JustGiving or its affiliates. All rights reserved.
+  // Licensed under the Apache license. See LICENSE file in the project root for full license information.
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  /*
+   * Class QueryString - a handler for query parameters
+   */
 
   var QueryString = function QueryString(conf) {
     _classCallCheck(this, QueryString);
@@ -59,7 +62,7 @@
     ApiClient.prototype._getOptions = function _getOptions(payload, method) {
       var options = { method: method || 'GET', headers: { 'x-app-id': this._appId, Accept: 'application/json' } };
       if (this._accessToken) {
-        options.headers['Authorization'] = this._accessToken;
+        options.headers.Authorization = this._accessToken;
       }
       if (payload || method === 'POST') {
         options.method = method || 'POST';
@@ -76,19 +79,19 @@
         if (contentType && contentType.indexOf('application/json') === 0) {
           return response.json().then(function (json) {
             if (json[0]) {
-              throw new Error(response.status + ' ' + response.statusText + '. ' + json[0].id + ' : ' + json[0].desc);
+              throw new Error('' + response.status + ' ' + response.statusText + '. ' + json[0].id + ' : ' + json[0].desc);
             }
           });
         }
 
-        throw new Error(response.status + ' ' + response.statusText);
+        throw new Error('' + response.status + ' ' + response.statusText);
       }
 
       return response.json();
     };
 
     ApiClient.prototype._fetch = function _fetch(resource, payload, method) {
-      return fetch(this._url + '/' + this._version + '/' + resource, this._getOptions(payload, method)).then(this._handleResponse);
+      return fetch('' + this._url + '/' + this._version + '/' + resource, this._getOptions(payload, method)).then(this._handleResponse);
     };
 
     // Account resource
@@ -267,23 +270,6 @@
     };
 
     // Search resource
-
-    ApiClient.prototype.searchCharities = function searchCharities(searchTerm, charityId, categoryId, pageNum, pageSize) {
-      var charityIdRestriction = charityId.length ? charityId.map(function (id) {
-        return 'charityId=' + id + '&';
-      }).join('') : 'charityId=' + charityId + '&';
-      var categoryIdRestriction = categoryId.length ? categoryId.map(function (id) {
-        return 'categoryId=' + id + '&';
-      }).join('') : 'categoryId=' + categoryId + '&';
-
-      var queryString = new QueryString({
-        q: searchTerm,
-        page: pageNum,
-        pageSize: pageSize
-      });
-
-      return this._fetch('charity/search' + queryString.text + '&' + categoryIdRestriction + charityIdRestriction);
-    };
 
     ApiClient.prototype.searchEvents = function searchEvents(searchTerm, pageNum, pageSize) {
       var queryString = new QueryString({
