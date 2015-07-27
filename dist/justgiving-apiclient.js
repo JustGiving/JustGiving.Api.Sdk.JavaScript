@@ -2,7 +2,7 @@
  * justgiving-apiclient - JustGiving API Client
  * @version v0.5.6
  * @link https://api.justgiving.com/
- * @license Apache v2.0
+ * @license Apache-2.0
  */
 (function (global, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -17,19 +17,19 @@
     global.JustGiving = mod.exports;
   }
 })(this, function (exports) {
-  'use strict';
-
-  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
   // Copyright (c) 2015 Giving.com, trading as JustGiving or its affiliates. All rights reserved.
   // Licensed under the Apache license. See LICENSE file in the project root for full license information.
 
   /*
    * Class QueryString - a handler for query parameters
    */
+  'use strict';
+
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   var QueryString = function QueryString(conf) {
     _classCallCheck(this, QueryString);
@@ -41,11 +41,12 @@
         this.text += encodeURIComponent(prop) + '=' + encodeURIComponent(conf[prop]);
       }
     }
-  };
+  }
 
   /*
    * Class ApiClient, main class of the SDK
    */
+  ;
 
   var ApiClient = (function () {
     function ApiClient(url, appId, accessToken) {
@@ -62,7 +63,7 @@
     ApiClient.prototype._getOptions = function _getOptions(payload, method) {
       var options = { method: method || 'GET', headers: { 'x-app-id': this._appId, Accept: 'application/json' } };
       if (this._accessToken) {
-        options.headers.Authorization = this._accessToken;
+        options.headers['Authorization'] = this._accessToken;
       }
       if (payload || method === 'POST') {
         options.method = method || 'POST';
@@ -79,19 +80,19 @@
         if (contentType && contentType.indexOf('application/json') === 0) {
           return response.json().then(function (json) {
             if (json[0]) {
-              throw new Error('' + response.status + ' ' + response.statusText + '. ' + json[0].id + ' : ' + json[0].desc);
+              throw new Error(response.status + ' ' + response.statusText + '. ' + json[0].id + ' : ' + json[0].desc);
             }
           });
         }
 
-        throw new Error('' + response.status + ' ' + response.statusText);
+        throw new Error(response.status + ' ' + response.statusText);
       }
 
       return response.json();
     };
 
     ApiClient.prototype._fetch = function _fetch(resource, payload, method) {
-      return fetch('' + this._url + '/' + this._version + '/' + resource, this._getOptions(payload, method)).then(this._handleResponse);
+      return fetch(this._url + '/' + this._version + '/' + resource, this._getOptions(payload, method)).then(this._handleResponse);
     };
 
     // Account resource
