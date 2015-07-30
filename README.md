@@ -3,6 +3,8 @@
 [![Built with Gulp](https://img.shields.io/badge/Built%20with-Gulp-orange.svg)](http://gulpjs.com)
 [![Tested with Mocha](https://img.shields.io/badge/Tested%20with-Mocha-green.svg)](http://http://mochajs.org/)
 [![Linted with ESLint](https://img.shields.io/badge/Linted%20with-ESLint-blue.svg)](http://eslint.org/)
+[![Dependency Status](https://david-dm.org/JustGiving/JustGiving.Api.Sdk.JavaScript.svg)](https://david-dm.org/JustGiving/JustGiving.Api.Sdk.JavaScript)
+[![devDependency Status](https://david-dm.org/JustGiving/JustGiving.Api.Sdk.JavaScript/dev-status.svg)](https://david-dm.org/JustGiving/JustGiving.Api.Sdk.JavaScript#info=devDependencies)
 
 JavaScript SDK
 ==============
