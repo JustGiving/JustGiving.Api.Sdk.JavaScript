@@ -193,6 +193,10 @@ export class ApiClient {
     return this._fetch('event', eventDetails);
   }
 
+  registerFundraisingPage(details) {
+    return this.fetch('fundraising/pages/', details, 'PUT')
+  }
+
   // Fundraising resource
   getFundraisingPages() {
     return this._fetch('fundraising/pages');
