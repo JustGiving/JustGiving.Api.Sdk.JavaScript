@@ -194,7 +194,7 @@ export class ApiClient {
   }
 
   registerFundraisingPage(details) {
-    return this.fetch('fundraising/pages/', details, 'PUT')
+    return this._fetch('fundraising/pages/', details, 'PUT');
   }
 
   // Fundraising resource
