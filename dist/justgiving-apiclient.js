@@ -1,6 +1,6 @@
 /**
  * justgiving-apiclient - JustGiving API Client
- * @version v0.5.6
+ * @version v0.5.8
  * @link https://api.justgiving.com/
  * @license Apache-2.0
  */
@@ -17,8 +17,8 @@
     global.JustGiving = mod.exports;
   }
 })(this, function (exports) {
-  // Copyright (c) 2015 Giving.com, trading as JustGiving or its affiliates. All rights reserved.
-  // Licensed under the Apache license. See LICENSE file in the project root for full license information.
+  // Copyright (c) 2015 Giving.com Ltd, trading as JustGiving, or its affiliates. All Rights Reserved.
+  // Licensed under the Apache License, Version 2.0 license. See LICENSE file in the project root for full license information.
 
   /*
    * Class QueryString - a handler for query parameters
@@ -41,12 +41,11 @@
         this.text += encodeURIComponent(prop) + '=' + encodeURIComponent(conf[prop]);
       }
     }
-  }
+  };
 
   /*
    * Class ApiClient, main class of the SDK
    */
-  ;
 
   var ApiClient = (function () {
     function ApiClient(url, appId, accessToken) {
@@ -232,6 +231,10 @@
 
     ApiClient.prototype.registerEvent = function registerEvent(eventDetails) {
       return this._fetch('event', eventDetails);
+    };
+
+    ApiClient.prototype.registerFundraisingPage = function registerFundraisingPage(details) {
+      return this._fetch('fundraising/pages/', details, 'PUT');
     };
 
     // Fundraising resource
