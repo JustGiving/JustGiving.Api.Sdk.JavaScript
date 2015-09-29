@@ -23,16 +23,14 @@ var banner = ['/**',
   ' */',
   ''].join('\n');
 
-gulp.task('clean', cb => {
-  del('./dist/justgiving-apiclient*', cb);
-});
+gulp.task('clean', cb => del('./dist/justgiving-apiclient*', cb) );
 
-gulp.task('build', ['build-full'], () => 
-   gulp.src('dist/justgiving-apiclient.js')
-     .pipe(uglify())
-     .pipe(rename({ extname: '.min.js' }))
-     .pipe(header(banner, { pkg : pkg } ))
-     .pipe(gulp.dest('dist'))
+gulp.task('build', ['build-full'], () =>
+  gulp.src('dist/justgiving-apiclient.js')
+    .pipe(uglify())
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(header(banner, { pkg : pkg } ))
+    .pipe(gulp.dest('dist'))
 );
 
 gulp.task('build-full', ['lint', 'clean'], () => 

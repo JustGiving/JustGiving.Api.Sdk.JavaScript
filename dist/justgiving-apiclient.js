@@ -41,11 +41,12 @@
         this.text += encodeURIComponent(prop) + '=' + encodeURIComponent(conf[prop]);
       }
     }
-  };
+  }
 
   /*
    * Class ApiClient, main class of the SDK
    */
+  ;
 
   var ApiClient = (function () {
     function ApiClient(url, appId, accessToken) {
