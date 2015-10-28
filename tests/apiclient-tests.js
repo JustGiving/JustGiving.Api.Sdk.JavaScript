@@ -17,7 +17,7 @@ describe('Given JG class', function() {
 
   describe('when constructor called correctly', function() {
     it('should create new instance', function() {
-      new JG('https://api-sandbox.justgiving.com');
+      new JG('https://api.sandbox.justgiving.com');
     });
   });
 });
