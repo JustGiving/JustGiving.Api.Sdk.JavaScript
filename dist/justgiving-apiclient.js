@@ -1,13 +1,15 @@
 /**
  * justgiving-apiclient - JustGiving API Client
- * @version v0.5.8
+ * @version v0.5.10
  * @link https://api.justgiving.com/
  * @license Apache-2.0
  */
+'use strict';
+
 (function (global, factory) {
-  if (typeof define === 'function' && define.amd) {
+  if (typeof define === "function" && define.amd) {
     define('JustGiving', ['exports'], factory);
-  } else if (typeof exports !== 'undefined') {
+  } else if (typeof exports !== "undefined") {
     factory(exports);
   } else {
     var mod = {
@@ -17,24 +19,21 @@
     global.JustGiving = mod.exports;
   }
 })(this, function (exports) {
-  // Copyright (c) 2015 Giving.com Ltd, trading as JustGiving, or its affiliates. All Rights Reserved.
-  // Licensed under the Apache License, Version 2.0 license. See LICENSE file in the project root for full license information.
-
-  /*
-   * Class QueryString - a handler for query parameters
-   */
-  'use strict';
-
-  Object.defineProperty(exports, '__esModule', {
+  Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   var QueryString = function QueryString(conf) {
     _classCallCheck(this, QueryString);
 
     this.text = '';
+
     for (var prop in conf) {
       if (conf.hasOwnProperty(prop) && conf[prop]) {
         this.text += this.text.length === 0 ? '?' : '&';
@@ -43,11 +42,7 @@
     }
   };
 
-  /*
-   * Class ApiClient, main class of the SDK
-   */
-
-  var ApiClient = (function () {
+  var ApiClient = exports.ApiClient = (function () {
     function ApiClient(url, appId, accessToken) {
       _classCallCheck(this, ApiClient);
 
@@ -331,7 +326,5 @@
 
     return ApiClient;
   })();
-
-  exports.ApiClient = ApiClient;
 });
 //# sourceMappingURL=justgiving-apiclient.js.map

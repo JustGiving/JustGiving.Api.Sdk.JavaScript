@@ -9,6 +9,16 @@ var gulp = require('gulp'),
     pkg = require('./package.json'),
     mocha = require('gulp-mocha'),
     webserver = require('gulp-webserver');
+    
+var babelPlugins = [
+  'check-es2015-constants',
+  'transform-es2015-arrow-functions',
+  'transform-es2015-block-scoping',
+  ['transform-es2015-classes', {loose: true}],
+  'transform-es2015-parameters',
+  'transform-es2015-template-literals',
+  'transform-es2015-modules-umd'
+];
 
 var paths = {
   scripts: ['src/**/justgiving-apiclient.js'],
@@ -36,7 +46,7 @@ gulp.task('build', ['build-full'], () =>
 gulp.task('build-full', ['lint', 'clean'], () => 
   gulp.src(paths.scripts)
     .pipe(sourcemaps.init())
-    .pipe(babel({modules:'umd', loose:'es6.classes', moduleId:'JustGiving'}))
+    .pipe(babel({plugins: babelPlugins, moduleId: 'JustGiving'}))
     .pipe(header(banner, { pkg : pkg } ))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('dist'))
